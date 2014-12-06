@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class ViewController: UIViewController {
     
     
     @IBOutlet weak var username: UITextField!
@@ -68,8 +68,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         user.signUpInBackgroundWithBlock {
             (succeeded: Bool!, signupError: NSError!) -> Void in
             
-            self.activityIndicator.stopAnimating()
-            UIApplication.sharedApplication().endIgnoringInteractionEvents()
+            self.stopActivityIndicator()
             
             if signupError == nil {
                 self.displayAlert(title: "Successfully Signed up", alertMessage: "")
@@ -92,8 +91,7 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         PFUser.logInWithUsernameInBackground(username.text, password:password.text) {
             (user: PFUser!, loginError: NSError!) -> Void in
             
-            self.activityIndicator.stopAnimating()
-            UIApplication.sharedApplication().endIgnoringInteractionEvents()
+            self.stopActivityIndicator()
             
             if user != nil {
                 // Do stuff after successful login.
@@ -133,6 +131,12 @@ class ViewController: UIViewController, UINavigationControllerDelegate, UIImageP
         activityIndicator.startAnimating()
         UIApplication.sharedApplication().beginIgnoringInteractionEvents()
     }
+    
+    func stopActivityIndicator(){
+        self.activityIndicator.stopAnimating()
+        UIApplication.sharedApplication().endIgnoringInteractionEvents()
+    }
+    
     
     func validateTextFields() -> Bool{
         if username.text == "" || password.text == "" {

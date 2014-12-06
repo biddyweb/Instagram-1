@@ -11,7 +11,8 @@ import UIKit
 class UserTableViewController: UITableViewController {
     
     var users = [""]
-    var following:[Bool]!
+    var following = [Bool]()
+    var refresher: UIRefreshControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,44 +23,12 @@ class UserTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-        var query = PFUser.query()
-        query.findObjectsInBackgroundWithBlock({
-            (objects: [AnyObject]!, error: NSError!) -> Void in
-            self.users.removeAll(keepCapacity: true)
-            
-            for object in objects{
-                var user:PFUser = object as PFUser
-                var isFollowing:Bool
-                
-                if user.username != PFUser.currentUser().username {
-                    self.users.append(user.username)
-                    
-                    isFollowing = false
-                    
-                    var query = PFQuery(className:"followers")
-                    query.whereKey("follower", equalTo:PFUser.currentUser().username)
-                    query.whereKey("following", equalTo:user.username)
-                    
-                    query.findObjectsInBackgroundWithBlock {
-                        (objects: [AnyObject]!, error: NSError!) -> Void in
-                        if error == nil {
-                            // Do something with the found objects
-                            for object in objects {
-                                isFollowing = true
-                            }
-                            self.following.append(isFollowing)
-                            self.tableView.reloadData()
-                        } else {
-                            // Log details of the failure
-                            println(error.userInfo!)
-                        }
-                    }
-                }
-                
-                
-            }
-            
-        })
+        updateUsers()
+        
+        refresher = UIRefreshControl()
+        refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refresher.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.view.addSubview(refresher)
     }
     
     override func didReceiveMemoryWarning() {
@@ -130,6 +99,53 @@ class UserTableViewController: UITableViewController {
             following["follower"] = PFUser.currentUser().username
             following.save()
         }
+        
+    }
+    
+    func updateUsers(){
+        var query = PFUser.query()
+        query.findObjectsInBackgroundWithBlock({
+            (objects: [AnyObject]!, error: NSError!) -> Void in
+            self.users.removeAll(keepCapacity: true)
+            
+            for object in objects{
+                var user:PFUser = object as PFUser
+                var isFollowing:Bool
+                
+                if user.username != PFUser.currentUser().username {
+                    self.users.append(user.username)
+                    
+                    isFollowing = false
+                    
+                    var query = PFQuery(className:"followers")
+                    query.whereKey("follower", equalTo:PFUser.currentUser().username)
+                    query.whereKey("following", equalTo:user.username)
+                    
+                    query.findObjectsInBackgroundWithBlock {
+                        (objects: [AnyObject]!, error: NSError!) -> Void in
+                        if error == nil {
+                            // Do something with the found objects
+                            for object in objects {
+                                isFollowing = true
+                            }
+                            self.following.append(isFollowing)
+                            self.tableView.reloadData()
+                        } else {
+                            // Log details of the failure
+                            println(error.userInfo!)
+                        }
+                        self.refresher.endRefreshing()
+                    }
+                }
+                
+                
+            }
+            
+        })
+    }
+    
+    func refresh(){
+        updateUsers()
         
     }
     

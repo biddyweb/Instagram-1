@@ -11,6 +11,7 @@ import UIKit
 class UserTableViewController: UITableViewController {
     
     var users = [""]
+    var following:[Bool]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,9 +29,36 @@ class UserTableViewController: UITableViewController {
             
             for object in objects{
                 var user:PFUser = object as PFUser
-                self.users.append(user.username)
+                var isFollowing:Bool
+                
+                if user.username != PFUser.currentUser().username {
+                    self.users.append(user.username)
+                    
+                    isFollowing = false
+                    
+                    var query = PFQuery(className:"followers")
+                    query.whereKey("follower", equalTo:PFUser.currentUser().username)
+                    query.whereKey("following", equalTo:user.username)
+                    
+                    query.findObjectsInBackgroundWithBlock {
+                        (objects: [AnyObject]!, error: NSError!) -> Void in
+                        if error == nil {
+                            // Do something with the found objects
+                            for object in objects {
+                                isFollowing = true
+                            }
+                            self.following.append(isFollowing)
+                            self.tableView.reloadData()
+                        } else {
+                            // Log details of the failure
+                            println(error.userInfo!)
+                        }
+                    }
+                }
+                
+                
             }
-            self.tableView.reloadData()
+            
         })
     }
     
@@ -57,6 +85,12 @@ class UserTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as UITableViewCell
         
+        if following.count > indexPath.row{
+            if following[indexPath.row] == true {
+                cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            }
+        }
+        
         // Configure the cell...
         cell.textLabel.text = users[indexPath.row]
         
@@ -64,12 +98,37 @@ class UserTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var cell = tableView.cellForRowAtIndexPath(indexPath)
+        var cell = tableView.cellForRowAtIndexPath(indexPath)!
         
-        if cell?.accessoryType == UITableViewCellAccessoryType.Checkmark {
-            cell?.accessoryType = UITableViewCellAccessoryType.None
+        if cell.accessoryType == UITableViewCellAccessoryType.Checkmark {
+            cell.accessoryType = UITableViewCellAccessoryType.None
+            
+            var query = PFQuery(className:"followers")
+            query.whereKey("follower", equalTo:PFUser.currentUser().username)
+            query.whereKey("following", equalTo:cell.textLabel.text)
+            
+            query.findObjectsInBackgroundWithBlock {
+                (objects: [AnyObject]!, error: NSError!) -> Void in
+                if error == nil {
+                    // Do something with the found objects
+                    for object in objects {
+                        //println(object.objectId)
+                        object.delete()
+                    }
+                } else {
+                    // Log details of the failure
+                    println(error.userInfo!)
+                }
+            }
+            
+            
         }else{
-            cell?.accessoryType = UITableViewCellAccessoryType.Checkmark
+            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
+            
+            var following = PFObject(className: "followers")
+            following["following"] = cell.textLabel.text
+            following["follower"] = PFUser.currentUser().username
+            following.save()
         }
         
     }

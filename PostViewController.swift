@@ -24,6 +24,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         var photoSelected:Bool = false
         imageToPost.image = UIImage(named: "man-placeholder")
         shareText.text = ""
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -60,7 +61,8 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         activityIndicator.center = self.view.center
         activityIndicator.hidesWhenStopped = true
         activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        view.addSubview(activityIndicator)
+//        view.addSubview(activityIndicator)
+        self.view.superview?.addSubview(activityIndicator)
         activityIndicator.startAnimating()
         UIApplication.sharedApplication().beginIgnoringInteractionEvents()
     }
@@ -91,7 +93,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
             error = "Please enter a message"
         }
         
-        if !error.isEmpty{
+        if !error.isEmpty {
             displayAlert(title: "Error in form", alertMessage: error)
         }else{
             
@@ -99,18 +101,11 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
             post["title"] = shareText.text
             post["username"] = PFUser.currentUser().username
             
-            activityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 100, 100))
-            activityIndicator.center = self.view.center
-            activityIndicator.hidesWhenStopped = true
-            activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-            self.view.addSubview(activityIndicator)
-            activityIndicator.startAnimating()
-            UIApplication.sharedApplication().beginIgnoringInteractionEvents()
-            
+            self.displayActivityIndicator()
             
             post.saveInBackgroundWithBlock({ (success: Bool, saveError: NSError!) -> Void in
-              self.displayActivityIndicator()
                 
+                self.stopActivityIndicator()
                 if !success {
                     self.displayAlert(title: "Could not post image", alertMessage: "Please try again later")
                 }else{
@@ -134,7 +129,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
                     })
                 }
                 
-                self.stopActivityIndicator()
+                
             })
         }
         

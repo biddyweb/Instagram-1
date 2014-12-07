@@ -26,17 +26,18 @@ class FeedTableViewController: UITableViewController {
                 for object in objects {
                     self.titles.append(object["title"] as String)
                     self.usernames.append(object["username"] as String)
-                    if object["imagefile"] != nil {
-                        self.imageFiles.append(object["imagefile"] as PFFile)
+                    
+                    if let image = object["imagefile"] as? PFFile {
+                        self.imageFiles.append(image)
                     }
                     
-                    
+                     self.tableView.reloadData()
                 }
             } else {
                 println(error)
             }
             
-            self.tableView.reloadData()
+           
         }
     }
     

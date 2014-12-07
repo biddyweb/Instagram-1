@@ -112,29 +112,31 @@ class UserTableViewController: UITableViewController {
                 var user:PFUser = object as PFUser
                 var isFollowing:Bool
                 
-                if user.username != PFUser.currentUser().username {
-                    self.users.append(user.username)
-                    
-                    isFollowing = false
-                    
-                    var query = PFQuery(className:"followers")
-                    query.whereKey("follower", equalTo:PFUser.currentUser().username)
-                    query.whereKey("following", equalTo:user.username)
-                    
-                    query.findObjectsInBackgroundWithBlock {
-                        (objects: [AnyObject]!, error: NSError!) -> Void in
-                        if error == nil {
-                            // Do something with the found objects
-                            for object in objects {
-                                isFollowing = true
+                if PFUser.currentUser() != nil {
+                    if user.username != PFUser.currentUser().username {
+                        self.users.append(user.username)
+                        
+                        isFollowing = false
+                        
+                        var query = PFQuery(className:"followers")
+                        query.whereKey("follower", equalTo:PFUser.currentUser().username)
+                        query.whereKey("following", equalTo:user.username)
+                        
+                        query.findObjectsInBackgroundWithBlock {
+                            (objects: [AnyObject]!, error: NSError!) -> Void in
+                            if error == nil {
+                                // Do something with the found objects
+                                for object in objects {
+                                    isFollowing = true
+                                }
+                                self.following.append(isFollowing)
+                                self.tableView.reloadData()
+                            } else {
+                                // Log details of the failure
+                                println(error.userInfo!)
                             }
-                            self.following.append(isFollowing)
-                            self.tableView.reloadData()
-                        } else {
-                            // Log details of the failure
-                            println(error.userInfo!)
+                            self.refresher.endRefreshing()
                         }
-                        self.refresher.endRefreshing()
                     }
                 }
                 

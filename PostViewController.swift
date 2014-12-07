@@ -14,7 +14,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     @IBOutlet weak var imageToPost: UIImageView!
     @IBOutlet weak var shareText: UITextField!
     
-    var photoSelected:Bool!
+    var photoSelected:Bool = false
     var activityIndicator:UIActivityIndicatorView!
     
     override func viewDidLoad() {
@@ -31,13 +31,17 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func logout(sender: AnyObject) {
+        PFUser.logOut()
+        self.performSegueWithIdentifier("logout", sender: self)
+    }
     
     func displayAlert(#title:String, alertMessage:String){
         
         var alert = UIAlertController(title: title, message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: {
             action in
-            self.dismissViewControllerAnimated(true, completion: nil)
+            //self.dismissViewControllerAnimated(true, completion: nil)
         }))
         
         self.presentViewController(alert, animated: true, completion: nil)
@@ -95,10 +99,17 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
             post["title"] = shareText.text
             post["username"] = PFUser.currentUser().username
             
-            self.displayActivityIndicator()
+            activityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 100, 100))
+            activityIndicator.center = self.view.center
+            activityIndicator.hidesWhenStopped = true
+            activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+            self.view.addSubview(activityIndicator)
+            activityIndicator.startAnimating()
+            UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+            
             
             post.saveInBackgroundWithBlock({ (success: Bool, saveError: NSError!) -> Void in
-                
+              self.displayActivityIndicator()
                 
                 if !success {
                     self.displayAlert(title: "Could not post image", alertMessage: "Please try again later")
@@ -122,6 +133,8 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
                         }
                     })
                 }
+                
+                self.stopActivityIndicator()
             })
         }
         

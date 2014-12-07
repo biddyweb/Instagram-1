@@ -25,6 +25,8 @@
 		9455FEFE1A3200960059EC69 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9455FEFD1A3200960059EC69 /* QuartzCore.framework */; };
 		9455FF001A32009C0059EC69 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9455FEFF1A32009C0059EC69 /* Security.framework */; };
 		9455FF021A3200A60059EC69 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9455FF011A3200A60059EC69 /* SystemConfiguration.framework */; };
+		946A0E851A3429020030A1EF /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946A0E841A3429020030A1EF /* FeedTableViewController.swift */; };
+		946A0E871A3429510030A1EF /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 946A0E861A3429510030A1EF /* FeedTableViewCell.swift */; };
 		9474FC6B1A33765600C510C9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FC6A1A33765600C510C9 /* PostViewController.swift */; };
 		94E1354C1A32EAC900060423 /* UserTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E1354B1A32EAC900060423 /* UserTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -63,6 +65,8 @@
 		9455FEFF1A32009C0059EC69 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9455FF011A3200A60059EC69 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9455FF031A32011D0059EC69 /* Instagram-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Instagram-Bridging-Header.h"; sourceTree = "<group>"; };
+		946A0E841A3429020030A1EF /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
+		946A0E861A3429510030A1EF /* FeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
 		9474FC6A1A33765600C510C9 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PostViewController.swift; path = ../PostViewController.swift; sourceTree = "<group>"; };
 		94E1354B1A32EAC900060423 /* UserTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +138,8 @@
 				9474FC6A1A33765600C510C9 /* PostViewController.swift */,
 				9455FECD1A3200150059EC69 /* ViewController.swift */,
 				94E1354B1A32EAC900060423 /* UserTableViewController.swift */,
+				946A0E841A3429020030A1EF /* FeedTableViewController.swift */,
+				946A0E861A3429510030A1EF /* FeedTableViewCell.swift */,
 				9455FECF1A3200150059EC69 /* Main.storyboard */,
 				9455FED21A3200150059EC69 /* Images.xcassets */,
 				9455FED41A3200150059EC69 /* LaunchScreen.xib */,
@@ -269,7 +275,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				9474FC6B1A33765600C510C9 /* PostViewController.swift in Sources */,
+				946A0E871A3429510030A1EF /* FeedTableViewCell.swift in Sources */,
 				9455FECE1A3200150059EC69 /* ViewController.swift in Sources */,
+				946A0E851A3429020030A1EF /* FeedTableViewController.swift in Sources */,
 				94E1354C1A32EAC900060423 /* UserTableViewController.swift in Sources */,
 				9455FECC1A3200150059EC69 /* AppDelegate.swift in Sources */,
 			);

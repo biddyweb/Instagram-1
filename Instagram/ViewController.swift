@@ -71,7 +71,7 @@ class ViewController: UIViewController {
             self.stopActivityIndicator()
             
             if signupError == nil {
-                self.displayAlert(title: "Successfully Signed up", alertMessage: "")
+                self.performSegueWithIdentifier("jumpToUserTable", sender: self)
             } else {
                 if let errorString = signupError.userInfo?["error"] as? NSString {
                     self.error = errorString
@@ -95,7 +95,8 @@ class ViewController: UIViewController {
             
             if user != nil {
                 // Do stuff after successful login.
-                self.displayAlert(title: "Successfully logged in", alertMessage: "")
+                //self.displayAlert(title: "Successfully logged in", alertMessage: "")
+                self.performSegueWithIdentifier("jumpToUserTable", sender: self)
             } else {
                 if let errorString = loginError.userInfo?["error"] as? NSString {
                     self.error = errorString
